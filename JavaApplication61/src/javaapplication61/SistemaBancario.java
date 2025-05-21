@@ -62,7 +62,7 @@ public class SistemaBancario {
     public void pagarPrestamo(String usuario, int index, double cantidad) {
         Persona p = usuarios.get(usuario);
         if (p != null) {
-            p.getCuenta().pagarPrestamo(index, cantidad);
+            p.getCuenta().pagarPrestamo(index, cantidad, cantidad);
         }
     }
 

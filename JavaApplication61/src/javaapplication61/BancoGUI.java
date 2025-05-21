@@ -1,21 +1,18 @@
-
 package javaapplication61;
-
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
 public class BancoGUI extends JFrame {
+
     private final SistemaBancario sistema;
     private String usuarioActual;
 
-    
     private JTextField tfUsuario;
     private JPasswordField pfContrasena;
     private JButton btnLogin, btnRegistrar;
 
-    
     private JLabel lblBienvenida, lblSaldo;
     private JTextArea taHistorial;
     private JButton btnDepositar, btnRetirar, btnTransferir, btnSolicitarPrestamo, btnPagarPrestamo, btnCambiarContrasena, btnCerrarSesion;
@@ -41,13 +38,22 @@ public class BancoGUI extends JFrame {
         btnLogin = new JButton("Ingresar");
         btnRegistrar = new JButton("Registrar");
 
-        gbc.insets = new Insets(5,5,5,5);
-        gbc.gridx = 0; gbc.gridy = 0; panel.add(lblUsuario, gbc);
-        gbc.gridx = 1; panel.add(tfUsuario, gbc);
-        gbc.gridx = 0; gbc.gridy = 1; panel.add(lblContrasena, gbc);
-        gbc.gridx = 1; panel.add(pfContrasena, gbc);
-        gbc.gridx = 0; gbc.gridy = 2; panel.add(btnLogin, gbc);
-        gbc.gridx = 1; panel.add(btnRegistrar, gbc);
+        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        panel.add(lblUsuario, gbc);
+        gbc.gridx = 1;
+        panel.add(tfUsuario, gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        panel.add(lblContrasena, gbc);
+        gbc.gridx = 1;
+        panel.add(pfContrasena, gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        panel.add(btnLogin, gbc);
+        gbc.gridx = 1;
+        panel.add(btnRegistrar, gbc);
 
         btnLogin.addActionListener(e -> login());
         btnRegistrar.addActionListener(e -> registrar());
@@ -164,7 +170,9 @@ public class BancoGUI extends JFrame {
         String montoStr = JOptionPane.showInputDialog(this, "Ingrese monto a depositar:");
         try {
             double monto = Double.parseDouble(montoStr);
-            if (monto <= 0) throw new NumberFormatException();
+            if (monto <= 0) {
+                throw new NumberFormatException();
+            }
             sistema.depositar(usuarioActual, monto);
             JOptionPane.showMessageDialog(this, "Depósito realizado con éxito", "Éxito", JOptionPane.INFORMATION_MESSAGE);
             actualizarHistorial();
@@ -177,7 +185,9 @@ public class BancoGUI extends JFrame {
         String montoStr = JOptionPane.showInputDialog(this, "Ingrese monto a retirar:");
         try {
             double monto = Double.parseDouble(montoStr);
-            if (monto <= 0) throw new NumberFormatException();
+            if (monto <= 0) {
+                throw new NumberFormatException();
+            }
             boolean exito = sistema.retirar(usuarioActual, monto);
             if (!exito) {
                 JOptionPane.showMessageDialog(this, "Saldo insuficiente o monto inválido", "Error", JOptionPane.ERROR_MESSAGE);
@@ -205,7 +215,9 @@ public class BancoGUI extends JFrame {
         String montoStr = JOptionPane.showInputDialog(this, "Ingrese monto a transferir:");
         try {
             double monto = Double.parseDouble(montoStr);
-            if (monto <= 0) throw new NumberFormatException();
+            if (monto <= 0) {
+                throw new NumberFormatException();
+            }
             boolean exito = sistema.transferir(usuarioActual, pDestino, monto);
             if (!exito) {
                 JOptionPane.showMessageDialog(this, "Saldo insuficiente o monto inválido", "Error", JOptionPane.ERROR_MESSAGE);
@@ -222,7 +234,9 @@ public class BancoGUI extends JFrame {
         String montoStr = JOptionPane.showInputDialog(this, "Ingrese monto del préstamo:");
         try {
             double monto = Double.parseDouble(montoStr);
-            if (monto <= 0) throw new NumberFormatException();
+            if (monto <= 0) {
+                throw new NumberFormatException();
+            }
             sistema.solicitarPrestamo(usuarioActual, monto);
             JOptionPane.showMessageDialog(this, "Préstamo solicitado con éxito", "Éxito", JOptionPane.INFORMATION_MESSAGE);
             actualizarHistorial();
@@ -254,7 +268,9 @@ public class BancoGUI extends JFrame {
             }
             String cantidadStr = JOptionPane.showInputDialog(this, "Ingrese monto a pagar:");
             double cantidad = Double.parseDouble(cantidadStr);
-            if (cantidad <= 0) throw new NumberFormatException();
+            if (cantidad <= 0) {
+                throw new NumberFormatException();
+            }
 
             sistema.pagarPrestamo(usuarioActual, indice, cantidad);
             JOptionPane.showMessageDialog(this, "Pago realizado", "Éxito", JOptionPane.INFORMATION_MESSAGE);
@@ -295,13 +311,17 @@ public class BancoGUI extends JFrame {
 
     private void actualizarHistorial() {
         Persona p = sistema.obtenerUsuario(usuarioActual);
-        if (p == null) return;
-        lblSaldo.setText("Saldo: $" + p.getCuenta().getSaldo());
+        if (p == null) {
+            return;
+        }
+        CuentaBancaria cuenta = p.getCuenta();
         StringBuilder sb = new StringBuilder();
-        for (String s : p.getCuenta().getHistorial()) {
+        for (String s : cuenta.getHistorial()) {
             sb.append(s).append("\n");
         }
         taHistorial.setText(sb.toString());
+        lblSaldo.setText("Saldo: $" + cuenta.getSaldo()
+                + " | Deuda: $" + cuenta.getTotalDeuda());
     }
 
     public static void main(String[] args) {
@@ -311,4 +331,3 @@ public class BancoGUI extends JFrame {
         });
     }
 }
-
